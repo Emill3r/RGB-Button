@@ -1,0 +1,83 @@
+int red = 9;
+int green = 10;
+int blue = 11;
+int button = 2;
+
+boolean lastButton = LOW;    // Last Button State
+boolean currentButton = LOW; // Current Button State
+int ledMode = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+boolean debounce(boolean last)
+{
+  boolean current = digitalRead(button);       // Read the button state
+  if (last != current)                         // If it's different...
+  {
+    delay(1);                                  // Wait 1ms
+    current = digitalRead(button);             // Read it again
+  }
+  return current;                              // Return the current value
+}
+
+void setMode(int mode){
+  if (mode == 1) //red
+  {
+  analogWrite(red, 255);
+  analogWrite(green, 0);
+  analogWrite(blue, 0);
+  }
+   if (mode == 2) //green
+  {
+  analogWrite(red, 0);
+  analogWrite(green, 255);
+  analogWrite(blue, 0);
+  }
+   if (mode == 3) //blue
+  {
+  analogWrite(red, 0);
+  analogWrite(green, 0);
+  analogWrite(blue, 255);
+  }
+  if (mode == 4) //custom (purple/pink)
+  {
+  analogWrite(red, 255);
+  analogWrite(green, 20);
+  analogWrite(blue, 147);
+  }
+  if (mode == 5) //random
+  {
+  analogWrite(red, random(0, 256));
+  analogWrite(green, random(0, 256));
+  analogWrite(blue, random(0, 256));
+  delay (500);
+  }
+   else
+  {
+    digitalWrite(red, LOW);
+    digitalWrite(green, LOW);
+    digitalWrite(blue, LOW);
+  }
+}
+
+void loop() {
+  
+ {
+  currentButton = debounce(lastButton);           // Read debounced state
+  if (lastButton == LOW && currentButton == HIGH) // If it was pressed...
+  {
+    ledMode++;                                    // Increment the LED value
+  }
+  lastButton = currentButton;                     // Reset button value
+  // If you’ve cycled through the different options,
+  // reset the counter to 0
+  if (ledMode == 6) ledMode = 0;
+  setMode(ledMode);                               // Change the LED state
+}
+  
+}
